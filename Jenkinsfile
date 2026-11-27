@@ -15,12 +15,29 @@ pipeline {
 
         stage('Verificar configuracao') {
             steps {
-                sh '''
-                    node --version
-                    npm --version
-                    eas --version
-                    eas project:info
-                '''
+                withCredentials([
+                    string(
+                        credentialsId: 'EXPO_TOKEN',
+                        variable: 'EXPO_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        echo "=== Node.js ==="
+                        node --version
+
+                        echo "=== NPM ==="
+                        npm --version
+
+                        echo "=== EAS CLI ==="
+                        eas --version
+
+                        echo "=== Autenticacao Expo ==="
+                        eas whoami
+
+                        echo "=== Projeto Expo ==="
+                        eas project:info
+                    '''
+                }
             }
         }
 
